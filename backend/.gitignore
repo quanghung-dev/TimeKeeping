@@ -21,6 +21,7 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 .env.*
+!.env.example
 
 # Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

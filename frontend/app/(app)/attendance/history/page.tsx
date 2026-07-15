@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{AttendanceHistory}from"@/features/attendance/components/attendance-history";export const metadata:Metadata={title:"Lịch sử chấm công"};export default function Page(){return<AttendanceHistory/>}

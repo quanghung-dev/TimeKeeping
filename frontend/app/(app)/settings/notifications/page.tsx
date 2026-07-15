@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{NotificationSettings}from"@/features/settings/components/notification-settings";export const metadata:Metadata={title:"Cài đặt thông báo"};export default function Page(){return<NotificationSettings/>}

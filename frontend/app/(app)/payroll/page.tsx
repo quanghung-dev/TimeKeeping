@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{PayrollDashboard}from"@/features/payroll/components/payroll-dashboard";export const metadata:Metadata={title:"Lương"};export default function PayrollPage(){return<PayrollDashboard/>}

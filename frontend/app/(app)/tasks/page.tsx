@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{TaskManager}from"@/features/tasks/components/task-manager";export const metadata:Metadata={title:"Công việc"};export default function TasksPage(){return<TaskManager/>}

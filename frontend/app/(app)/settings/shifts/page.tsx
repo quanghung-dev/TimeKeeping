@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{ShiftSettings}from"@/features/settings/components/shift-settings";export const metadata:Metadata={title:"Ca làm việc"};export default function Page(){return<ShiftSettings/>}

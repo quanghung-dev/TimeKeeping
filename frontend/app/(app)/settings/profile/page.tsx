@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{ProfileSettings}from"@/features/settings/components/profile-settings";export const metadata:Metadata={title:"Hồ sơ"};export default function Page(){return<ProfileSettings/>}

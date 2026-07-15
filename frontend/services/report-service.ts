@@ -1,0 +1,1 @@
+import{apiRequest}from"@/lib/api/client";import type{ReportResult}from"@/types/report";export const reportService={range:(start:string,end:string)=>apiRequest<ReportResult>(`/reports/monthly?start=${start}&end=${end}`)};

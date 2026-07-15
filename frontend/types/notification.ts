@@ -1,0 +1,2 @@
+export interface NotificationSettings{checkInReminder:boolean;checkOutReminder:boolean;breakReminder:boolean;missingTimeReminder:boolean;dailySummary:boolean;weeklySummary:boolean;browserEnabled:boolean;emailEnabled:boolean;}
+export interface AppNotification{id:string;notificationType:string;title:string;body:string;readAt:string|null;createdAt:string;}export interface NotificationList{items:AppNotification[];page:number;pageSize:number;total:number;}

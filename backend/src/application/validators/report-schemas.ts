@@ -1,0 +1,1 @@
+import{z}from"zod";export const reportRangeSchema=z.object({start:z.iso.date(),end:z.iso.date()}).refine(v=>v.end>=v.start,{path:["end"],message:"Khoang ngay khong hop le"});export const reportYearSchema=z.object({year:z.coerce.number().int().min(2000).max(2200)});

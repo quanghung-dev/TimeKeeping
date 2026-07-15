@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{WorkSettings}from"@/features/settings/components/work-settings";export const metadata:Metadata={title:"Lịch làm việc"};export default function Page(){return<WorkSettings/>}

@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{PomodoroTimer}from"@/features/pomodoro/components/pomodoro-timer";export const metadata:Metadata={title:"Pomodoro"};export default function Page(){return<PomodoroTimer/>}

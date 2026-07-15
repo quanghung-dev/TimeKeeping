@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{OfflineQueue}from"@/features/settings/components/offline-queue";export const metadata:Metadata={title:"Đồng bộ offline"};export default function Page(){return<OfflineQueue/>}

@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{DataSettings}from"@/features/settings/components/data-settings";export const metadata:Metadata={title:"Dữ liệu"};export default function Page(){return<DataSettings/>}

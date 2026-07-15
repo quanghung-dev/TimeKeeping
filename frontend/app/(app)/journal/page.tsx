@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{JournalManager}from"@/features/journal/components/journal-manager";export const metadata:Metadata={title:"Nhật ký"};export default function Page(){return<JournalManager/>}

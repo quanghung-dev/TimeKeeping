@@ -1,0 +1,1 @@
+import type{Metadata}from"next";import{ReportsDashboard}from"@/features/reports/components/reports-dashboard";export const metadata:Metadata={title:"Báo cáo"};export default function ReportsPage(){return<ReportsDashboard/>}

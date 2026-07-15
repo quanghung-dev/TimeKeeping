@@ -1,0 +1,39 @@
+export interface WorkSchedule {
+  id: string;
+  dayOfWeek: number;
+  isWorkingDay: boolean;
+  startTime: string | null;
+  endTime: string | null;
+  standardMinutes: number;
+  defaultBreakMinutes: number;
+  shiftIds: string[];
+}
+
+export interface WorkShift {
+  id: string;
+  name: string;
+  color: string;
+  startTime: string;
+  endTime: string;
+  standardMinutes: number;
+  defaultBreakMinutes: number;
+  isActive: boolean;
+}
+
+export interface WorkSettings {
+  lateGraceMinutes: number;
+  earlyLeaveGraceMinutes: number;
+  overtimeAfterMinutes: number;
+  roundingMinutes: 0 | 5 | 10 | 15;
+  autoDetectOvertime: boolean;
+  autoDeductBreak: boolean;
+  scheduleMode: "fixed" | "flexible" | "shift";
+  earliestCheckInMinutes: number;
+  latestCheckInMinutes: number;
+  standardWorkDaysPerMonth: string;
+  checkoutOpenBreakPolicy: "require_end" | "auto_end";
+  maxSessionMinutes: number;
+  overtimeRule: "after_daily_threshold" | "outside_schedule" | "manual_only";
+  schedules: WorkSchedule[];
+  shifts: WorkShift[];
+}

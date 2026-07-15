@@ -1,0 +1,2 @@
+export interface Project { id:string; name:string; color:string; description:string|null; isArchived:boolean; }
+export interface Task { id:string; projectId:string|null; projectName:string|null; projectColor:string|null; title:string; description:string|null; taskDate:string; priority:"low"|"medium"|"high"; status:"pending"|"in_progress"|"completed"|"cancelled"; estimatedMinutes:number|null; trackedMinutes:number; activeTimerId:string|null; completedAt:string|null; }
