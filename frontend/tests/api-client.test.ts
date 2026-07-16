@@ -95,7 +95,46 @@ describe("api client csrf concurrency", () => {
     expect(callCount).toBe(2);
   });
 
-  it("6, 7: token rejected by backend (e.g. 403), does not trigger infinite retry loop", async () => {
+  it("6: refreshes a stale csrf token and retries the mutation once", async () => {
+    let csrfCalls = 0;
+    let mutationCalls = 0;
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url.endsWith("/auth/csrf")) {
+        csrfCalls++;
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            success: true,
+            data: { csrfToken: csrfCalls === 1 ? "stale-token" : "fresh-token" },
+          }),
+        };
+      }
+
+      mutationCalls++;
+      return mutationCalls === 1
+        ? {
+            ok: false,
+            status: 403,
+            json: async () => ({ success: false, message: "CSRF_TOKEN_INVALID", errors: null }),
+          }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, data: { result: "ok" } }),
+          };
+    });
+
+    await expect(apiRequest("/test", { method: "POST", body: {} })).resolves.toEqual({ result: "ok" });
+    expect(csrfCalls).toBe(2);
+    expect(mutationCalls).toBe(2);
+
+    const calls = fetchMock.mock.calls.filter(([url]: unknown[]) => typeof url === "string" && url.endsWith("/test"));
+    expect((calls[0]?.[1]?.headers as Headers).get("x-csrf-token")).toBe("stale-token");
+    expect((calls[1]?.[1]?.headers as Headers).get("x-csrf-token")).toBe("fresh-token");
+  });
+
+  it("7: stops after one retry when the refreshed token is rejected", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url.endsWith("/auth/csrf")) {
         return {
@@ -121,6 +160,8 @@ describe("api client csrf concurrency", () => {
     await expect(apiRequest("/test", { method: "POST", body: {} })).rejects.toThrow();
     
     const testCalls = fetchMock.mock.calls.filter(([url]: unknown[]) => typeof url === "string" && url.endsWith("/test"));
-    expect(testCalls).toHaveLength(1);
+    expect(testCalls).toHaveLength(2);
+    const csrfCalls = fetchMock.mock.calls.filter(([url]: unknown[]) => typeof url === "string" && url.endsWith("/auth/csrf"));
+    expect(csrfCalls).toHaveLength(2);
   });
 });

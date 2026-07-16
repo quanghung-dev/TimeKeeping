@@ -41,3 +41,13 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Test coverage
+coverage/
+*.lcov
+
+# Vercel
+.vercel/
+
+# Scratch workspace
+scratch/

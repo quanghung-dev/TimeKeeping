@@ -70,13 +70,19 @@ async function refreshSession(): Promise<boolean> {
 export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
   body?: unknown;
   skipRefresh?: boolean;
+  skipCsrfRetry?: boolean;
 }
 
 export async function apiRequest<T>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
-  const { body: rawBody, skipRefresh = false, ...requestOptions } = options;
+  const {
+    body: rawBody,
+    skipRefresh = false,
+    skipCsrfRetry = false,
+    ...requestOptions
+  } = options;
   const method = (requestOptions.method ?? "GET").toUpperCase();
   const isMutation = !["GET", "HEAD", "OPTIONS"].includes(method);
   const headers = new Headers(options.headers);
@@ -100,6 +106,10 @@ export async function apiRequest<T>(
   });
 
   const cannotRefresh = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/csrf"].includes(path);
+  if (response.status === 403 && isMutation && !skipCsrfRetry) {
+    csrfToken = null;
+    return apiRequest<T>(path, { ...options, skipCsrfRetry: true });
+  }
   if (response.status === 401 && !skipRefresh && !cannotRefresh) {
     if (await refreshSession()) return apiRequest<T>(path, { ...options, skipRefresh: true });
   }

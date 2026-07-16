@@ -1,1 +1,55 @@
-import{test,expect}from"@playwright/test";test("register, check in, break and check out",async({page})=>{const email=`e2e-${Date.now()}@example.com`;await page.goto("/register");await page.getByLabel("Tên hiển thị").fill("E2E User");await page.getByLabel("Email").fill(email);await page.getByLabel("Mật khẩu",{exact:true}).fill("Strong#Pass123");await page.getByLabel("Xác nhận").fill("Strong#Pass123");await page.getByRole("button",{name:"Tạo tài khoản"}).click();await expect(page).toHaveURL(/dashboard/);await page.evaluate(async()=>{const csrf=await fetch("/api/auth/csrf",{credentials:"include"}).then(r=>r.json())as{data:{csrfToken:string}};const current=await fetch("/api/work-settings",{credentials:"include"}).then(r=>r.json())as{data:Record<string,unknown>};await fetch("/api/work-settings",{method:"PUT",credentials:"include",headers:{"content-type":"application/json","x-csrf-token":csrf.data.csrfToken},body:JSON.stringify({...current.data,scheduleMode:"flexible"})});});await page.getByRole("button",{name:"Chấm vào"}).click();await expect(page.getByText("Đang làm việc")).toBeVisible();await page.getByRole("button",{name:"Bắt đầu nghỉ"}).click();await expect(page.getByText("Đang nghỉ")).toBeVisible();await page.getByRole("button",{name:"Tiếp tục làm"}).click();await page.waitForTimeout(1000);await page.getByRole("button",{name:"Chấm ra"}).click();await expect(page.getByText("Đã hoàn thành")).toBeVisible();await page.goto("/reports");await expect(page.getByRole("heading",{name:"Báo cáo"})).toBeVisible();await page.goto("/calendar");await expect(page.getByRole("heading",{name:"Lịch"})).toBeVisible();});
+import { expect, test } from "@playwright/test";
+
+test("register, check in, break and check out", async ({ page }) => {
+  const email = `e2e-${Date.now()}@example.com`;
+
+  await page.goto("/register");
+  await page.getByLabel("Tên hiển thị").fill("E2E User");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Mật khẩu", { exact: true }).fill("Strong#Pass123");
+  await page.getByLabel("Xác nhận").fill("Strong#Pass123");
+  await page.getByRole("button", { name: "Tạo tài khoản" }).click();
+  await expect(page).toHaveURL(/dashboard/);
+
+  await page.evaluate(async () => {
+    const csrfResponse = await fetch("/api/auth/csrf", { credentials: "include" });
+    const csrf = (await csrfResponse.json()) as { data: { csrfToken: string } };
+    const settingsResponse = await fetch("/api/work-settings", { credentials: "include" });
+    const current = (await settingsResponse.json()) as {
+      data: Record<string, unknown> & { standardWorkDaysPerMonth: string };
+    };
+    const settings = { ...current.data };
+    delete settings.shifts;
+    const updateResponse = await fetch("/api/work-settings", {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": csrf.data.csrfToken,
+      },
+      body: JSON.stringify({
+        ...settings,
+        scheduleMode: "flexible",
+        standardWorkDaysPerMonth: Number(current.data.standardWorkDaysPerMonth),
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Unable to enable flexible schedule: ${updateResponse.status}`);
+    }
+  });
+
+  await page.getByRole("button", { name: "Chấm vào" }).click();
+  await expect(page.getByText("Đang làm việc")).toBeVisible();
+  await page.getByRole("button", { name: "Bắt đầu nghỉ" }).click();
+  await expect(page.getByText("Đang nghỉ")).toBeVisible();
+  await page.getByRole("button", { name: "Tiếp tục làm" }).click();
+  await page.waitForTimeout(1000);
+  await page.getByRole("button", { name: "Chấm ra" }).click();
+  await expect(page.getByText("Đã hoàn thành")).toBeVisible();
+
+  await page.goto("/reports");
+  await expect(page.getByRole("heading", { name: "Báo cáo" })).toBeVisible();
+  await page.goto("/calendar");
+  await expect(page.getByRole("heading", { name: "Lịch" })).toBeVisible();
+});
