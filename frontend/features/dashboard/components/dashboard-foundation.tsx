@@ -11,16 +11,13 @@ import {
   CalendarClock,
   Clock3,
   ClockPlus,
-  DatabaseBackup,
   History,
-  WifiOff,
   Coffee,
   LogIn,
   LogOut,
   Moon,
   RefreshCw,
   Sun,
-  Timer,
   Umbrella,
 } from "lucide-react";
 import Link from "next/link";
@@ -280,13 +277,9 @@ export function DashboardFoundation() {
               <Button asChild variant="secondary"><Link href="/calendar"><CalendarDays /> Lịch</Link></Button>
               <Button asChild variant="secondary"><Link href="/leaves"><Umbrella /> Nghỉ phép</Link></Button>
               <Button asChild variant="secondary"><Link href="/overtime"><ClockPlus /> Làm thêm</Link></Button>
-              <Button asChild variant="secondary"><Link href="/settings/notifications"><Bell /> Nhắc nhở</Link></Button>
               <Button asChild variant="secondary"><Link href="/settings/profile"><Settings /> Hồ sơ</Link></Button>
               <Button asChild variant="secondary"><Link href="/settings/work-schedule"><CalendarClock /> Lịch làm</Link></Button>
-              <Button asChild variant="secondary"><Link href="/settings/data"><DatabaseBackup /> Dữ liệu</Link></Button>
-              <Button asChild variant="secondary"><Link href="/settings/offline"><WifiOff /> Offline</Link></Button>
               <Button asChild variant="secondary"><Link href="/journal"><BookOpen /> Nhật ký</Link></Button>
-              <Button asChild variant="secondary"><Link href="/pomodoro"><Timer /> Pomodoro</Link></Button>
             </div>
             <Button variant="outline" className="w-full" disabled={logout.isPending} onClick={() => logout.mutate()}>
               <LogOut /> {logout.isPending ? "Đang đăng xuất…" : "Đăng xuất"}
