@@ -8,7 +8,7 @@ Dùng pooled URL cho `DATABASE_URL`, direct URL cho `DATABASE_DIRECT_URL` và SS
 
 Deploy thư mục `backend`; `vercel.json` trỏ vào Express handler `src/index.ts`. Cấu hình biến trong `.env.example`; ba token secret khác nhau và dài ít nhất 32 ký tự. `APP_URL` là frontend HTTPS. Resend cần key và sender đã xác minh.
 
-Đặt `CRON_SECRET` đủ mạnh để bảo vệ `/api/internal/reminders`; Vercel Cron gọi endpoint này mỗi 15 phút bằng Bearer token. Chỉ bật web push hoặc Google Calendar khi đã cung cấp credentials thật.
+Đặt `CRON_SECRET` đủ mạnh để bảo vệ `/api/internal/reminders`. Trên Vercel Hobby, dùng scheduler bên ngoài gọi endpoint này mỗi 15 phút bằng Bearer token; khi nâng Pro có thể thêm lại Vercel Cron với lịch `*/15 * * * *`. Chỉ bật web push hoặc Google Calendar khi đã cung cấp credentials thật.
 
 ## Frontend Vercel
 
