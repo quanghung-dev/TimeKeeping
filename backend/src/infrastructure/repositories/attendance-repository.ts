@@ -8,6 +8,8 @@ export interface AttendanceContextRow {
   is_working_day: boolean;
   scheduled_start_at: Date | null;
   scheduled_end_at: Date | null;
+  check_in_window_start_at: Date;
+  check_in_window_end_at: Date;
   required_minutes: number;
   late_grace_minutes: number;
   early_leave_grace_minutes: number;
@@ -85,6 +87,8 @@ export class AttendanceRepository {
        )
        SELECT uc.work_date::text, uc.timezone, ws.id AS schedule_id,
               COALESCE(ws.is_working_day, FALSE) AS is_working_day,
+              (uc.work_date + TIME '06:00') AT TIME ZONE uc.timezone AS check_in_window_start_at,
+              (uc.work_date + TIME '18:00') AT TIME ZONE uc.timezone AS check_in_window_end_at,
               CASE WHEN ws.start_time IS NULL THEN NULL
                    ELSE (uc.work_date + ws.start_time) AT TIME ZONE uc.timezone END AS scheduled_start_at,
               CASE WHEN ws.end_time IS NULL THEN NULL

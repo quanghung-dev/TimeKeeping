@@ -167,14 +167,11 @@ async function completeIdempotent(
   return snapshot;
 }
 
-function validateCheckInWindow(context: AttendanceContextRow, eventAt: Date): void {
-  if (context.schedule_mode === "flexible" || !context.scheduled_start_at) return;
-  const earliest = context.scheduled_start_at.getTime() - context.earliest_check_in_minutes * 60_000;
-  const latest = context.scheduled_start_at.getTime() + context.latest_check_in_minutes * 60_000;
-  if (eventAt.getTime() < earliest) {
+export function validateCheckInWindow(context: AttendanceContextRow, eventAt: Date): void {
+  if (eventAt.getTime() < context.check_in_window_start_at.getTime()) {
     throw new AppError(409, "CHECK_IN_TOO_EARLY", "Chua den khung gio duoc phep cham cong");
   }
-  if (eventAt.getTime() > latest) {
+  if (eventAt.getTime() > context.check_in_window_end_at.getTime()) {
     throw new AppError(409, "CHECK_IN_TOO_LATE", "Da qua khung gio duoc phep cham cong");
   }
 }
